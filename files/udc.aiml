@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+     
+    <category>
+        <pattern>  
+            ^ <set>sveicieni</set> ^
+        </pattern>
+        <template>
+            <think>
+                <set name = "topic">buyticket</set>
+            </think>
+            <delay>1</delay>
+            Labdien! Vai vēlies iegādāties kino biļetes?
+        </template>
+  </category>
+  
+  <topic name="buyticket">
+        <category>
+            <pattern>
+                 ^ <set>yesanswers</set> ^
+            </pattern>
+            <template>
+                <think>
+                    ^ <set name = "topic">filmchoice</set>
+                </think>
+                <delay>1</delay>
+                Kāda žanra filmu vēlies apmeklēt?
+            </template>
+        </category>
+        <category>
+            <pattern> <set>noanswers</set></pattern>
+            <template><delay>1</delay>Labi, gaidīsim Jūs vēl</template>
+        </category>
+  </topic>
+  
+  <topic name="filmchoice">
+        <category>
+            <pattern>
+                ^ <set>comedy</set> ^
+            </pattern>
+            <template>
+                <think>
+                    <set name = "chosenfilm"> Komēdija </set>
+                    <set name = "topic">confirmchoice</set>
+                </think><delay>1</delay>
+                Pieejams seanss šodien 19:00. Vai apstiprināt?
+            </template>
+        </category>
+        <category>
+            <pattern>
+                 ^ <set>horror</set> ^
+            </pattern>
+            <template><delay>1</delay>
+                <think>
+                    <set name = "chosenfilm"> Šausmu filma </set>
+                    <set name = "topic">confirmchoice</set>
+                </think>
+                Pieejams seanss šodien 21:00. Vai apstiprināt?
+            </template>
+        </category>
+        <category>
+            <pattern>
+                ^ <set>adventure</set> ^
+            </pattern>
+            <template><delay>1</delay>
+                <think>
+                    <set name = "chosenfilm"> Piedzīvojumu filma </set>
+                    <set name = "topic">confirmchoice</set>
+                </think>
+                Pieejams seanss šodien 16:00. Vai apstiprināt?
+            </template>
+        </category>
+        <category>
+            <pattern>*</pattern>
+            <template><delay>1</delay>
+                Diemžēl šāds žars pašlaik netiek izrādīts. Pieejamie žanri: komēdija, šausmu un piedzīvojumu
+            </template>
+        </category>
+  </topic>
+  
+  <topic name="confirmchoice">
+        <category>
+            <pattern> <set>yesanswers</set></pattern>
+            <template>
+                <think>
+                    <set name = "topic">popcorn</set>
+                </think>
+                <delay>1</delay>
+                Vai vēlaties arī popkornu?
+            </template>
+        </category>
+        <category>
+            <pattern> <set>noanswers</set></pattern>
+            <template><delay>1</delay>Labi, gaidīsim Jūs vēl</template>
+        </category>
+  </topic>
+  
+  <topic name="popcorn">
+        <category>
+            <pattern> <set>yesanswers</set></pattern>
+            <template>
+                <think>
+                    <set name = "buypopcorn">yes</set>
+                    <set name = "topic">drinkconfirm</set>
+                </think>
+                <delay>1</delay>
+                Vai vēlaties arī kādu dzērienu?
+            </template>
+        </category>
+        <category>
+            <pattern> <set>noanswers</set></pattern>
+            <template>
+                <think>
+                    <set name = "buypopcorn">no</set>
+                    <set name = "topic">drinkconfirm</set>
+                </think>
+                <delay>1</delay>
+                Vai vēlaties arī kādu dzērienu?
+            </template>
+        </category>
+  </topic>
+  
+  <topic name="drinkconfirm">
+        <category>
+            <pattern> <set>yesanswers</set></pattern>
+            <template>
+                <think>
+                    <set name = "topic">drinkchoice</set>
+                    <set name = "buydrink">yes</set>
+                </think>
+                <delay>1</delay>
+                Kādu dzērienu vēlies?
+            </template>
+        </category>
+        <category>
+            <pattern> <set>noanswers</set></pattern>
+            <template>
+                <think>
+                    <set name = "topic">pasutijums</set>
+                    <set name = "buydrink">no</set>
+                </think>
+                <srai> apkopojums </srai>
+                </template>
+        </category>
+  </topic>
+  
+  <topic name="drinkchoice">
+        <category>
+            <pattern> <set>lemonade</set></pattern>
+            <template>
+                <think>
+                    <set name = "chosendrink">Limonāde</set>
+                    <set name = "topic">pasutijums</set>
+                </think>
+                <srai> apkopojums </srai>
+            </template>
+        </category>
+        <category>
+            <pattern> <set>juice</set></pattern>
+            <template>
+                <think>
+                    <set name = "chosendrink">Sula</set>
+                    <set name = "topic">pasutijums</set>
+                </think>
+                <srai> apkopojums </srai>
+            </template>
+        </category>
+        <category>
+            <pattern> *</pattern>
+            <template>
+                Diemžēl šādu dzērienu nepiedāvājam. Piedāvājam limonādi un sulu. Kādu dzērienu vēlies?
+            </template>
+        </category>
+  </topic>
+  
+  <topic name="pasutijums">
+        <category>
+            <pattern> apkopojums </pattern>
+            <template>
+                Kopējais pirkums:<br/>
+                Biļete uz filmu žanrā: <get name="chosenfilm" /><br/>
+                <condition name = "buydrink" value = "yes">
+                    Dzēriens: <get name="chosendrink" /><br/>
+                </condition>
+                <condition name = "buypopcorn" value = "yes">
+                    Popkorns<br/>
+                </condition>
+         <random>
+            <li> Paldies par pirkumu! </li>
+            <li> Jauku skatīšanos! </li>
+            <li> Gaidīsim vēl! </li>
+         </random>
+   </template>
+        </category>
+  </topic>
+  
+  <category>
+    <pattern>*</pattern>
+    <template>Piedod, nesapratu. Mēģini vēlreiz</template>
+  </category>
+</aiml>
